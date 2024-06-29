@@ -18,7 +18,7 @@ const FirstRoute = ({ queries }) => (
             <TextArea
                 h={20}
                 placeholder="Ask your queries here"
-                placeholderTextColor={"#f2f3f7"}
+                placeholderTextColor={"grey"}
                 shadow={2}
                 w="100%"
                 backgroundColor={"white"}
@@ -75,21 +75,23 @@ const initialLayout = {
 const VideoPlayerScreen = ({ navigation, route }) => {
     const dummyData = useSelector(state => state.mainReducer.dummyData)
     const videoContent = dummyData.filter((val) => val.id === route.params.id)[0];
+    console.log("1")
     const videoRef = useRef();
     const [currentlyWatch, setCurrentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
     const [currentTime, setCurrentTime] = useState(videoContent.playlist[currentlyWatch]?.completed);
     const [duration, setDuration] = useState(videoContent.playlist[currentlyWatch]?.duration);
     const [isPlaying, setIsPlaying] = useState(true);
     const [muted, setMuted] = useState(false);
-    const [fullscreen, setFullscreen] = useState(false);
+    const [fullscreen] = useState(false);
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
     // console.log(videoContent)
 
     useFocusEffect(
         React.useCallback(() => {
-            if (isFocused)
+            if (isFocused){
                 setIsPlaying(true)
+            }
         }, [isFocused])
     )
     const toggleMute = () => {
@@ -97,7 +99,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
     };
 
     const toggleFullscreen = () => {
-        setFullscreen(!fullscreen);
+        setIsPlaying(false)
         navigation.navigate("VideoPlayerAloneScreen", {
             ...videoContent,
             currentTime,
@@ -163,7 +165,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                     renderScene={renderScene}
                     renderTabBar={renderTabBar}
                     onIndexChange={setIndex}
-                    style={{ marginTop: 15 }}
+                    style={{ marginTop: 8 }}
                 />
             </>
         );
@@ -230,8 +232,8 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                 muted={muted}
                 ref={videoRef}
                 onLoadStart={() => {
-                    if (videoContent.playlist[currentlyWatch]?.completed > 0 && videoContent.playlist[currentlyWatch]?.completed !== videoContent.playlist[currentlyWatch]?.duration) {
-                        videoRef.current.seek(videoContent.playlist[currentlyWatch]?.completed)
+                    if (currentTime > 0 && currentTime !== duration) {
+                        videoRef.current.seek(currentTime)
                     } else {
                         videoRef.current.seek(0)
                     }

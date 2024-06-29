@@ -116,7 +116,7 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
                     duration={duration}
                     currentTime={currentTime}
                     muted={muted}
-                    fullscreen={false} // Not in fullscreen mode here
+                    fullscreen={true} // Not in fullscreen mode here
                     toggleFullscreen={toggleFullScreen}
                     onSeek={handleSeek}
                     toggleMute={() => setMuted(!muted)}
