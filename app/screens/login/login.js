@@ -14,7 +14,6 @@ const LoginScreen = ({ navigation }) => {
                 <Image source={require('../../assets/images/digi_logo.png')} style={{ height: 45, objectFit: "contain" }} />
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                     <Image source={require('../../assets/images/18383.jpg')} style={{ height: 300, objectFit: "contain" }} />
-
                 </View>
             </View>
             <View style={{ flex: 1, padding: 20, paddingVertical: 25, backgroundColor: "#f2f3f7", borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
@@ -64,7 +63,9 @@ const LoginScreen = ({ navigation }) => {
                     <Text style={{width:"90%"}}>By signing up, you agree to our <Text style={{ color: "blue" }}>terms of service</Text> and <Text style={{ color: "blue" }}>privacy policy.</Text></Text>
                 </View>
 
-                <Button colorScheme={"blue"} borderRadius={10} mt={5} size={"lg"} onPress={() => console.log("hello world")}>Sign-in</Button>
+                <Button colorScheme={"blue"} borderRadius={10} mt={5} size={"lg"} onPress={() => {
+                    navigation.navigate("DashbardScreen")
+                }}>Sign-in</Button>
 
             </View>
         </View>

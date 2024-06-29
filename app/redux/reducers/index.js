@@ -9,5 +9,5 @@ const mainPersist = {
 }
 
 export default combineReducers({
-  authReducer:persistReducer(mainPersist,MainReducer),
+  mainReducer:persistReducer(mainPersist,MainReducer),
 });
