@@ -7,34 +7,47 @@ import { Box, Progress } from 'native-base';
 import { navigationRef } from '../../navigations/mainNavigation'
 import { useSelector } from 'react-redux'
 
-const renderItem = ({ item }) => (
-    <View style={styles.itemProgress}>
-        <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => {
-            navigationRef.navigate("VideoPlayerScreen", {
-                ...item
-            })
-        }}>
-            <View style={{ width: 110, height: 120, borderRadius: 10, overflow: "hidden" }}>
-                <Image source={{ uri: item.imageUrl }} style={{ height: 120, width: 110, objectFit: "cover" }} />
-            </View>
-            <View style={{ marginLeft: 12 }}>
-                <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
-                <Text style={{ color: "blue", marginTop: 5 }}>{`${sumPlaylistDuration(item.playlist).hours}h ${sumPlaylistDuration(item.playlist).minutes > 0 ? sumPlaylistDuration(item.playlist).minutes + "m Learning left" : "Learning left"}`}</Text>
-                {
-                    !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
-                        <Box w="100%" mt={6} >
-                            <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
-                        </Box>
-                        <Text style={{ fontSize: 18 }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
-                        </>
-                        :
-                        <Text style={{fontSize:18,color:"green"}}>Start Course</Text>
+const renderItem = ({ item }) => {
+    const duration = sumPlaylistDuration(item.playlist);
 
-                }
+    let timeLeftText = "Start Course";
+
+    if (duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0) {
+        timeLeftText = `${duration.hours > 0 ? duration.hours + 'h ' : ''}${duration.minutes > 0 ? duration.minutes + 'm ' : ''}${duration.seconds > 0 ? duration.seconds + 's ' : ''}Learning left`;
+    }
+    return (
+        (
+            <View style={styles.itemProgress}>
+                <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => {
+                    navigationRef.navigate("VideoPlayerScreen", {
+                        ...item
+                    })
+                }}>
+                    <View style={{ width: 110, height: 120, borderRadius: 10, overflow: "hidden" }}>
+                        <Image source={{ uri: item.imageUrl }} style={{ height: 120, width: 110, objectFit: "cover" }} />
+                    </View>
+                    <View style={{ marginLeft: 12 }}>
+                        <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
+                        {
+                            !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
+                                <Text style={{ color: "blue", marginTop: 5 }}>{timeLeftText}</Text>
+
+                                {/* <Text style={{ color: "blue", marginTop: 5 }}>{`${sumPlaylistDuration(item.playlist).hours}h ${sumPlaylistDuration(item.playlist).minutes > 0 ? sumPlaylistDuration(item.playlist).minutes + "m Learning left" : "Learning left"}`}</Text> */}
+                                <Box w="100%" mt={6} >
+                                    <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
+                                </Box>
+                                <Text style={{ fontSize: 18 }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
+                            </>
+                                :
+                                <Text style={{ fontSize: 18, color: "green" }}>Start Course</Text>
+
+                        }
+                    </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
-    </View>
-);
+        )
+    )
+};
 
 const renderItemRecentlyCompleted = ({ item }) => (
     <View style={styles.item}>
@@ -48,55 +61,78 @@ const renderItemRecentlyCompleted = ({ item }) => (
             </View>
             <View style={{ marginLeft: 12 }}>
                 <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
-                <Text style={{ color: "green", marginTop: 5, textAlignVertical: "center" }}>{`${sumPlaylistDuration(item.playlist).hours}h ${sumPlaylistDuration(item.playlist).minutes > 0 ? sumPlaylistDuration(item.playlist).minutes + "m completed" : "completed"}`} <AntDesign name={"checkcircle"} size={14} color="green" /></Text>
+                <Text style={{ color: "green", marginTop: 5, textAlignVertical: "center" }}>{`completed`} <AntDesign name={"checkcircle"} size={14} color="green" /></Text>
             </View>
         </TouchableOpacity>
     </View>
 );
 
-const renderItemVertical = ({ item }) => (
+const renderItemVertical = ({ item }) => {
+    const duration = sumPlaylistDuration(item.playlist);
 
-    <View style={styles.itemVertical}>
-        <TouchableOpacity style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => {
-            navigationRef.navigate("VideoPlayerScreen", {
-                ...item
-            })
-        }}>
-            <View style={{ width: 90, height: 90, borderRadius: 10, overflow: "hidden" }}>
-                <Image source={{ uri: item.imageUrl }} style={{ height: 90, width: 90, objectFit: "cover" }} />
-            </View>
-            <View style={{ marginLeft: 12 }}>
-                <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
-                {item.isFree ?
-                    <>
-                        <Text style={{ color: "blue", marginTop: 5 }}>{`${sumPlaylistDuration(item.playlist).hours}h ${sumPlaylistDuration(item.playlist).minutes > 0 ? sumPlaylistDuration(item.playlist).minutes + "m Learning left" : "Learning left"}`}</Text>
-                        <Box w="100%" mt={6} >
-                            <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
-                        </Box>
-                    </>
-                    :
-                    <View style={{ marginTop: 5, flexDirection: "row", alignItems: "center" }}>
-                        <SimpleLineIcons name="lock" size={18} />
-                        <Text style={{ fontSize: 16, marginLeft: 8 }}>Locked</Text>
+    let timeLeftText = "Start Course";
+
+    if (duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0) {
+        timeLeftText = `${duration.hours > 0 ? duration.hours + 'h ' : ''}${duration.minutes > 0 ? duration.minutes + 'm ' : ''}${duration.seconds > 0 ? duration.seconds + 's ' : ''}Learning left`;
+    }
+    return (
+        (
+
+            <View style={styles.itemVertical}>
+                <TouchableOpacity disabled={!item.isFree} style={{ flexDirection: "row", alignItems: "flex-start",opacity: !item.isFree? 0.5 : 1 }} onPress={() => {
+                    navigationRef.navigate("VideoPlayerScreen", {
+                        ...item
+                    })
+                }}>
+                    <View style={{ width: 90, height: 90, borderRadius: 10, overflow: "hidden" }}>
+                        <Image source={{ uri: item.imageUrl }} style={{ height: 90, width: 90, objectFit: "cover" }} />
                     </View>
-                }
+                    <View style={{ marginLeft: 12 }}>
+                        <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
+                        {item.isFree ?
+                            <>
+                                {
+                                    !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
+                                        <Text style={{ color: "blue", marginTop: 5 }}>{timeLeftText}</Text>
+                                        <Box w="100%" mt={6} >
+                                            <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
+                                        </Box>
+                                    </>
+                                        :
+                                        <Text style={{ fontSize: 18, color: "green" }}>Start Course</Text>
+
+                                }
+                            </>
+                            :
+                            <View style={{ marginTop: 5, flexDirection: "row", alignItems: "center" }}>
+                                <SimpleLineIcons name="lock" size={18} />
+                                <Text style={{ fontSize: 16, marginLeft: 8 }}>Locked</Text>
+                            </View>
+                        }
+                    </View>
+                </TouchableOpacity>
             </View>
-        </TouchableOpacity>
-    </View>
-);
+        )
+    )
+};
 
 function sumPlaylistDuration(playlist) {
     if (playlist.reduce((total, video) => total + video.completed, 0) === 0) {
+        const totalDurationInSeconds = playlist.reduce((total, video) => total + video.duration, 0) - playlist.reduce((total, video) => total + video.completed, 0);
         return {
-            hours: 0,
-            minutes: 0
+            hours: Math.floor(totalDurationInSeconds / 3600),
+            minutes: Math.floor((totalDurationInSeconds % 3600) / 60),
+            seconds: Math.floor(totalDurationInSeconds % 60)
+
         }
     }
     const totalDurationInSeconds = playlist.reduce((total, video) => total + video.duration, 0) - playlist.reduce((total, video) => total + video.completed, 0);
     // const totalDurationWatchedInSeconds = playlist.reduce((total, video) => total + video.completed, 0);
     const hours = Math.floor(totalDurationInSeconds / 3600);
     const minutes = Math.floor((totalDurationInSeconds % 3600) / 60);
-    return { hours, minutes };
+    const seconds = Math.floor(totalDurationInSeconds % 60);
+
+    return { hours, minutes, seconds };
 }
 
 function sumPlaylistDurationWatched(playlist) {
@@ -114,42 +150,62 @@ const DashboardScreen = ({ navigation }) => {
                 barStyle={"light-content"}
                 backgroundColor={"black"}
             />
-            <View style={{ flex: 2 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10, paddingHorizontal:20 ,paddingTop:20}}>
-                    <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ marginRight: 10 }}>
-                        <Ionicons name="arrow-back" size={18} color="black" />
-                    </TouchableOpacity>
-                    <Text>Back to Dashbard</Text>
-                </View>
-
-                <Text style={{...styles.heading,fontSize:16,color:"#5699e8",backgroundColor:"#e5eefa",width:120,textAlign:"center",padding:3 ,borderRadius:10}}>In Progress</Text>
-                <FlatList
-                    data={dummyData}
-                    renderItem={renderItem}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    ItemSeparatorComponent={()=><View style={{padding:10}} />}
-                    contentContainerStyle={{paddingHorizontal:20}}
-                    style={{
-                        flexGrow: 0,
-                        height: 400,
-                        marginBottom: 10,
-                    }}
-                />
-                <Text style={styles.heading}>Recent Completed</Text>
-                <FlatList
-                    data={dummyData.filter((val) => {
-                        return val.playlist.reduce((total, video) => total + video.completed, 0)
-                    })}
-                    renderItem={renderItemRecentlyCompleted}
-                    horizontal
-                    ItemSeparatorComponent={()=><View style={{padding:10}} />}
-                    contentContainerStyle={{paddingHorizontal:20}}
-                    showsHorizontalScrollIndicator={false}
-                    style={styles.horizontalList}
-                />
+            <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10, paddingHorizontal: 20, paddingTop: 20 }}>
+                <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ marginRight: 10 }}>
+                    <Ionicons name="arrow-back" size={18} color="black" />
+                </TouchableOpacity>
+                <Text>Back to Dashbard</Text>
             </View>
-            <View style={{ flex: 1.5, backgroundColor: "white", padding: 20 }}>
+            {dummyData.filter((val) => {
+                return val.playlist.reduce((total, video) => total + video.completed, 0)
+            })[0] && <View style={{
+                flex: dummyData.filter((val) => {
+                    return val.playlist.reduce((total, video) => total + video.duration, 0) === val.playlist.reduce((total, video) => total + video.completed, 0)
+                })[0] ? 2 : 1
+            }}>
+                    <Text style={{ ...styles.heading, fontSize: 16, color: "#5699e8", backgroundColor: "#e5eefa", width: 120, textAlign: "center", padding: 3, borderRadius: 10 }}>In Progress</Text>
+                    <FlatList
+                        data={dummyData.filter((val) => {
+                            return val.playlist.reduce((total, video) => total + video.completed, 0)
+                        })}
+                        renderItem={renderItem}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        ItemSeparatorComponent={() => <View style={{ padding: 10 }} />}
+                        contentContainerStyle={{ paddingHorizontal: 20 }}
+                        style={{
+                            flexGrow: 0,
+                            height: 400,
+                            marginBottom: 10,
+                        }}
+                    />
+                    {
+                        dummyData.filter((val) => {
+                            return val.playlist.reduce((total, video) => total + video.duration, 0) === val.playlist.reduce((total, video) => total + video.completed, 0)
+                        })[0] && <>
+                            <Text style={styles.heading}>Recent Completed</Text>
+                            <FlatList
+                                data={dummyData.filter((val) => {
+                                    if (val.playlist.reduce((total, video) => total + video.duration, 0) !== 0) {
+                                        return val.playlist.reduce((total, video) => total + video.duration, 0) === (val.playlist.reduce((total, video) => total + video.completed, 0))
+                                    }
+                                    return false
+                                })}
+                                renderItem={renderItemRecentlyCompleted}
+                                horizontal
+                                ItemSeparatorComponent={() => <View style={{ padding: 10 }} />}
+                                contentContainerStyle={{ paddingHorizontal: 20 }}
+                                showsHorizontalScrollIndicator={false}
+                                style={styles.horizontalList}
+                            />
+                        </>
+                    }
+                </View>}
+            <View style={{
+                flex: dummyData.filter((val) => {
+                    return val.playlist.reduce((total, video) => total + video.duration, 0) === val.playlist.reduce((total, video) => total + video.completed, 0)
+                })[0] ? 1.5 : 2, backgroundColor: "white", padding: 20
+            }}>
                 <Text style={styles.heading}>Upcoming Modules</Text>
                 <FlatList
                     data={dummyData}
@@ -174,7 +230,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
-        marginHorizontal:20
+        marginHorizontal: 20
     },
     horizontalList: {
         flexGrow: 0,
@@ -185,7 +241,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemProgress: {
-        // flex: 1,
+        height: 150,
         backgroundColor: 'white',
         marginVertical: 8,
         padding: 15,
@@ -216,8 +272,8 @@ const styles = StyleSheet.create({
     },
     itemVertical: {
         backgroundColor: 'white',
-        marginVertical: 8,
-        padding: 15,
+        margin: 5,
+        padding: 10,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {

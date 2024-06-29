@@ -242,9 +242,9 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                 }}
                 onEnd={() => {
                     if (currentlyWatch < videoContent.playlist.length) {
-                        dispatch(currentlyWatching({ currentlyWatching: currentlyWatch + 1, data: videoContent }));
-                        setCurrentlyWatch(prev => prev + 1)
-                        playNextVideo()
+                        // dispatch(currentlyWatching({ currentlyWatching: currentlyWatch + 1, data: videoContent }));
+                        // setCurrentlyWatch(prev => prev + 1)
+                        // playNextVideo()
                     }
                 }}
                 onProgress={onPlayerProgress}

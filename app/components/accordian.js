@@ -65,7 +65,7 @@ const transformData = (inputData) => {
     };
     console.log(item, "item")
 
-    if (item.duration && item.completed > item.duration - 3) {
+    if (item.duration && item.completed > item.duration - 2) {
       newData.icon = <View style={{
         flex: 1,
         justifyContent: 'center',
@@ -76,7 +76,7 @@ const transformData = (inputData) => {
       </View>
       newData.circleColor = '#009688'
       newData.lineColor = '#009688'
-    } else if (!item.duration && item.completed === 0) {
+    } else if (item.duration && item.completed === 0) {
       newData.icon = <Icon name="lock" size={14} color="white" />
       newData.circleColor = 'grey'
       newData.lineColor = '#009688'
