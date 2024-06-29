@@ -6,12 +6,11 @@ import Video from 'react-native-video';
 import Accordion from '../../components/accordian';
 import VideoController from '../../components/videoController';
 import { TabView, SceneMap } from 'react-native-tab-view';
-import { useDispatch } from 'react-redux';
-import { playDuration, playedDuration } from '../../redux/actions/mainActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { currentlyWatching, playDuration, playedDuration } from '../../redux/actions/mainActions';
 import Feather from "react-native-vector-icons/Feather";
 import { Box, Center, Pressable, useColorModeValue, TextArea, Button, Avatar } from 'native-base';
-import Timeline from 'react-native-timeline-flatlist';
-import Circle from '../../components/circle';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 
 const FirstRoute = ({ queries }) => (
     <View style={{ flex: 1, height: "100%", backgroundColor: "white" }}>
@@ -74,16 +73,25 @@ const initialLayout = {
 };
 
 const VideoPlayerScreen = ({ navigation, route }) => {
-    const videoContent = route.params;
+    const dummyData = useSelector(state => state.mainReducer.dummyData)
+    const videoContent = dummyData.filter((val) => val.id === route.params.id)[0];
     const videoRef = useRef();
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
+    const [currentlyWatch, setCurrentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
+    const [currentTime, setCurrentTime] = useState(videoContent.playlist[currentlyWatch]?.completed);
+    const [duration, setDuration] = useState(videoContent.playlist[currentlyWatch]?.duration);
     const [isPlaying, setIsPlaying] = useState(true);
     const [muted, setMuted] = useState(false);
     const [fullscreen, setFullscreen] = useState(false);
     const dispatch = useDispatch();
+    const isFocused = useIsFocused()
     // console.log(videoContent)
 
+    useFocusEffect(
+        React.useCallback(() => {
+            if (isFocused)
+                setIsPlaying(true)
+        }, [isFocused])
+    )
     const toggleMute = () => {
         setMuted(!muted);
     };
@@ -147,9 +155,8 @@ const VideoPlayerScreen = ({ navigation, route }) => {
     const renderMyItem = () => {
         return (
             <>
-                <Accordion title="Content List" leftIconName="list" listData={videoContent.playlist}>
+                <Accordion title="Content List" leftIconName="list" listData={videoContent} duration={duration} currentTime={currentTime} currentlyWatch={currentlyWatch}>
                     {/* Content inside accordion if any */}
-                    
                 </Accordion>
                 <TabView
                     navigationState={{ index, routes }}
@@ -161,6 +168,14 @@ const VideoPlayerScreen = ({ navigation, route }) => {
             </>
         );
     };
+
+    // console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
+    console.log(currentlyWatch, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
+
+    const playNextVideo = () => {
+        console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
+        // videoRef.current.seek(0)
+    }
 
     return (
 
@@ -177,29 +192,60 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                     <Text style={{ fontSize: 18 }} numberOfLines={1}>{videoContent.courseName}</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
-                    <TouchableOpacity style={{ flexDirection: "row", alignItems: "center" }}>
-                        <FontAwesome name="angle-left" size={15} color="blue" />
-                        <Text style={{ marginLeft: 10, color: "blue" }}>Previous</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginLeft: 25 }}>
-                        <Text style={{ marginRight: 10, color: "blue" }}>Next</Text>
-                        <FontAwesome name="angle-right" size={15} color={"blue"} />
-                    </TouchableOpacity>
+                    {
+                        videoContent.playlist.length && currentlyWatch > 0 &&
+                        <TouchableOpacity onPress={() => {
+                            dispatch(currentlyWatching({ currentlyWatching: currentlyWatch - 1, data: videoContent }));
+                            setCurrentlyWatch(prev => prev - 1)
+                            playNextVideo()
+
+                        }}
+                            style={{ flexDirection: "row", alignItems: "center" }}>
+                            <FontAwesome name="angle-left" size={15} color="blue" />
+                            <Text style={{ marginLeft: 10, color: "blue" }}>Previous</Text>
+                        </TouchableOpacity>
+                    }
+                    {
+                        !(videoContent.playlist.length - 1 === currentlyWatch) &&
+                        <TouchableOpacity
+                            onPress={() => {
+                                dispatch(currentlyWatching({ currentlyWatching: currentlyWatch + 1, data: videoContent }));
+                                setCurrentlyWatch(prev => prev + 1)
+                                playNextVideo()
+                            }}
+                            style={{ flexDirection: "row", alignItems: "center", marginLeft: 25 }}>
+                            <Text style={{ marginRight: 10, color: "blue" }}>Next</Text>
+                            <FontAwesome name="angle-right" size={15} color={"blue"} />
+                        </TouchableOpacity>
+                    }
+
                 </View>
             </View>
 
-
-
             <Video
-                source={{ uri: videoContent.playlist[0].videoUrl }}
+                source={{ uri: videoContent.playlist[currentlyWatch]?.videoUrl }}
                 paused={!isPlaying}
                 pictureInPicture={true}
                 playInBackground={true}
                 muted={muted}
                 ref={videoRef}
+                onLoadStart={() => {
+                    if (videoContent.playlist[currentlyWatch]?.completed > 0 && videoContent.playlist[currentlyWatch]?.completed !== videoContent.playlist[currentlyWatch]?.duration) {
+                        videoRef.current.seek(videoContent.playlist[currentlyWatch]?.completed)
+                    } else {
+                        videoRef.current.seek(0)
+                    }
+                }}
                 onLoad={(value) => {
                     dispatch(playDuration({ totalDuration: value.duration, data: videoContent }));
                     setDuration(value.duration);
+                }}
+                onEnd={() => {
+                    if (currentlyWatch < videoContent.playlist.length) {
+                        dispatch(currentlyWatching({ currentlyWatching: currentlyWatch + 1, data: videoContent }));
+                        setCurrentlyWatch(prev => prev + 1)
+                        playNextVideo()
+                    }
                 }}
                 onProgress={onPlayerProgress}
                 onBuffer={() => { console.log("On Buffer") }}
@@ -207,7 +253,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                 style={styles.backgroundVideo}
             />
 
-             <VideoController
+            <VideoController
                 duration={duration}
                 currentTime={currentTime}
                 fullscreen={fullscreen}
@@ -218,7 +264,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                 onPlayPause={handlePlayPause}
                 isPlaying={isPlaying}
             />
-             <FlatList data={[1]} style={{flex:1}} renderItem={renderMyItem} />
+            <FlatList data={[1]} style={{ flex: 1 }} renderItem={renderMyItem} />
         </View>
     );
 }

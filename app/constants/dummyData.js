@@ -3,7 +3,7 @@ export const DUMMY_DATA = [
     id: 1,
     courseName: "Digital Shopper Journey",
     imageUrl: "https://www.w3schools.com/w3images/lights.jpg",
-    currentlyWatching: null,
+    currentlyWatching: 0,
     isFree: true,
     purchased: false,
     queries: [{
@@ -64,7 +64,7 @@ export const DUMMY_DATA = [
     id: 2,
     courseName: "Advanced Python",
     imageUrl: "https://www.w3schools.com/w3images/nature.jpg",
-    currentlyWatching: null,
+    currentlyWatching: 0,
     isFree: true,
     purchased: false,
     queries: [{
@@ -125,7 +125,7 @@ export const DUMMY_DATA = [
     id: 3,
     courseName: "React Native Development",
     imageUrl: "https://www.w3schools.com/w3images/mountains.jpg",
-    currentlyWatching: null,
+    currentlyWatching: 0,
     isFree: true,
     purchased: false,
     queries: [{
@@ -186,7 +186,7 @@ export const DUMMY_DATA = [
     id: 4,
     courseName: "Machine Learning",
     imageUrl: "https://www.w3schools.com/w3images/forest.jpg",
-    currentlyWatching: null,
+    currentlyWatching: 0,
     isFree: false,
     purchased: false,
     queries: [{
@@ -247,7 +247,7 @@ export const DUMMY_DATA = [
     id: 5,
     courseName: "Web Development",
     imageUrl: "https://www.w3schools.com/w3images/city.jpg",
-    currentlyWatching: null,
+    currentlyWatching: 0,
     isFree: false,
     queries: [{
       id: 1,

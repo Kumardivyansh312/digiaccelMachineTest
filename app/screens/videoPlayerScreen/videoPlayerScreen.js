@@ -3,18 +3,21 @@ import { View, StyleSheet, Dimensions, TouchableOpacity, Animated } from 'react-
 import Video from 'react-native-video';
 import VideoController from '../../components/videoController';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { currentlyWatching, playDuration, playedDuration } from '../../redux/actions/mainActions';
 
 const VideoPlayerAloneScreen = ({ navigation, route }) => {
     // Retrieve video details from route params
     const videoContent = route.params;
     const videoRef = useRef();
+    const [currentlyWatch, setCurrentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
     const [currentTime, setCurrentTime] = useState(route.params.currentTime);
     const [duration, setDuration] = useState(route.params.duration);
     const [isPlaying, setIsPlaying] = useState(route.params.isPlaying);
     const [muted, setMuted] = useState(route.params.muted);
     const [showController, setShowController] = useState(false);
     const isFocused = useIsFocused()
-    // console.log(route.params, "Route")
+    const dispatch = useDispatch()
 
     useFocusEffect(
         useCallback(() => {
@@ -47,6 +50,8 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
     // Function to update current time during playback
     const onPlayerProgress = (progress) => {
         setCurrentTime(progress.currentTime);
+        dispatch(playedDuration({ currentTime: progress.currentTime, data: videoContent }));
+
     };
 
     // Function to toggle video controller visibility with smooth animation
@@ -59,6 +64,11 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
         setShowController(!showController);
     };
 
+    const playNextVideo = () => {
+        videoRef.current.seek(0)
+        // console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
+    }
+
     return (
         <View style={styles.container}>
             {/* Video Container */}
@@ -69,14 +79,31 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
             >
                 {/* Video Component */}
                 <Video
-                    source={{ uri: videoContent.playlist[0].videoUrl }}
+                    source={{ uri: videoContent.playlist[videoContent.currentlyWatching].videoUrl }}
                     controls={false} // Controls managed by VideoController component
                     paused={!isPlaying} // Ensure proper handling of play/pause state
                     pictureInPicture={true}
                     playInBackground={true}
                     muted={muted}
                     ref={videoRef}
-                    onLoad={(value) => setDuration(value.duration)}
+                    onLoadStart={() => {
+                        if (videoContent.playlist[currentlyWatch]?.completed > 0 && videoContent.playlist[currentlyWatch]?.completed !== videoContent.playlist[currentlyWatch]?.duration) {
+                            videoRef.current.seek(videoContent.playlist[currentlyWatch]?.completed)
+                        }else{
+                            videoRef.current.seek(0)
+                        }
+                    }}
+                    onLoad={(value) => {
+                        dispatch(playDuration({ totalDuration: value.duration, data: videoContent }));
+                        setDuration(value.duration);
+                    }}
+                    onEnd={() => {
+                        if (currentlyWatch < videoContent.playlist.length) {
+                            dispatch(currentlyWatching({ currentlyWatching: currentlyWatch + 1, data: videoContent }));
+                            setCurrentlyWatch(prev => prev + 1)
+                            playNextVideo()
+                        }
+                    }}
                     onProgress={onPlayerProgress}
                     onError={(error) => console.log("Video Player Error: ", error)} // Log any errors
                     style={styles.backgroundVideo}

@@ -3,14 +3,13 @@ import React from 'react'
 import Ionicons from "react-native-vector-icons/Ionicons"
 import AntDesign from "react-native-vector-icons/AntDesign"
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons"
-import { ProgressBar, MD3Colors } from 'react-native-paper';
 import { Box, Progress } from 'native-base';
 import { navigationRef } from '../../navigations/mainNavigation'
 import { useSelector } from 'react-redux'
 
 const renderItem = ({ item }) => (
     <View style={styles.itemProgress}>
-        <TouchableOpacity style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => {
+        <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => {
             navigationRef.navigate("VideoPlayerScreen", {
                 ...item
             })
@@ -21,11 +20,17 @@ const renderItem = ({ item }) => (
             <View style={{ marginLeft: 12 }}>
                 <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
                 <Text style={{ color: "blue", marginTop: 5 }}>{`${sumPlaylistDuration(item.playlist).hours}h ${sumPlaylistDuration(item.playlist).minutes > 0 ? sumPlaylistDuration(item.playlist).minutes + "m Learning left" : "Learning left"}`}</Text>
-                <Box w="100%" mt={6} >
-                    <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
-                </Box>
-                <Text style={{ fontSize: 18 }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
+                {
+                    !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
+                        <Box w="100%" mt={6} >
+                            <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
+                        </Box>
+                        <Text style={{ fontSize: 18 }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
+                        </>
+                        :
+                        <Text style={{fontSize:18,color:"green"}}>Start Course</Text>
 
+                }
             </View>
         </TouchableOpacity>
     </View>
@@ -33,7 +38,7 @@ const renderItem = ({ item }) => (
 
 const renderItemRecentlyCompleted = ({ item }) => (
     <View style={styles.item}>
-        <TouchableOpacity style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => {
+        <TouchableOpacity style={{ flexDirection: "row" }} onPress={() => {
             navigationRef.navigate("VideoPlayerScreen", {
                 ...item
             })
@@ -102,32 +107,33 @@ function sumPlaylistDurationWatched(playlist) {
 
 const DashboardScreen = ({ navigation }) => {
 
-    const dummyData = useSelector(state=> state.mainReducer.dummyData)
-    // console.log(dummyData[0].playlist[0], "Hello")
+    const dummyData = useSelector(state => state.mainReducer.dummyData)
     return (
         <View style={{ flex: 1 }}>
             <StatusBar
                 barStyle={"light-content"}
                 backgroundColor={"black"}
             />
-            <View style={{ flex: 2, padding: 20 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10 }}>
+            <View style={{ flex: 2 }}>
+                <View style={{ flexDirection: "row", alignItems: "center", paddingBottom: 10, paddingHorizontal:20 ,paddingTop:20}}>
                     <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ marginRight: 10 }}>
                         <Ionicons name="arrow-back" size={18} color="black" />
                     </TouchableOpacity>
                     <Text>Back to Dashbard</Text>
                 </View>
 
-                <Text style={styles.heading}>In Progress</Text>
+                <Text style={{...styles.heading,fontSize:16,color:"#5699e8",backgroundColor:"#e5eefa",width:120,textAlign:"center",padding:3 ,borderRadius:10}}>In Progress</Text>
                 <FlatList
                     data={dummyData}
                     renderItem={renderItem}
                     horizontal
                     showsHorizontalScrollIndicator={false}
+                    ItemSeparatorComponent={()=><View style={{padding:10}} />}
+                    contentContainerStyle={{paddingHorizontal:20}}
                     style={{
                         flexGrow: 0,
                         height: 400,
-                        marginBottom: 10
+                        marginBottom: 10,
                     }}
                 />
                 <Text style={styles.heading}>Recent Completed</Text>
@@ -137,6 +143,8 @@ const DashboardScreen = ({ navigation }) => {
                     })}
                     renderItem={renderItemRecentlyCompleted}
                     horizontal
+                    ItemSeparatorComponent={()=><View style={{padding:10}} />}
+                    contentContainerStyle={{paddingHorizontal:20}}
                     showsHorizontalScrollIndicator={false}
                     style={styles.horizontalList}
                 />
@@ -163,9 +171,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     heading: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
         marginBottom: 10,
+        marginHorizontal:20
     },
     horizontalList: {
         flexGrow: 0,
@@ -176,11 +185,10 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemProgress: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: 'white',
         marginVertical: 8,
         padding: 15,
-        marginRight: 16,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {
@@ -196,7 +204,6 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         padding: 15,
         marginVertical: 8,
-        marginRight: 16,
         borderRadius: 10,
         shadowColor: "#000",
         shadowOffset: {

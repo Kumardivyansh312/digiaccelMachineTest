@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import AntDesign from "react-native-vector-icons/AntDesign"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Circle from './circle';
+import { useSelector } from 'react-redux';
 
 // const data = [
 //   {
@@ -84,14 +85,15 @@ const transformData = (inputData) => {
       newData.lineColor = '#009688'
       newData.icon = <Circle size={30} borderWidth={4} borderColor='green' percentage={item.completed / item.duration * 100} />
     }
-
     return newData;
   });
 };
 
-const Accordion = ({ title, children, leftIconName, listData }) => {
+const Accordion = ({ title, leftIconName, listData }) => {
   const [expanded, setExpanded] = useState(false);
   const [animation] = useState(new Animated.Value(0));
+  const dummyData = useSelector(state => state.mainReducer.dummyData)
+
 
   const toggleAccordion = () => {
     setExpanded(!expanded);
@@ -129,11 +131,10 @@ const Accordion = ({ title, children, leftIconName, listData }) => {
           <View style={styles.containerTimeline}>
             <Timeline
               style={styles.list}
-              data={transformData(listData)}
+              data={transformData(dummyData.filter(val => val.id === listData.id)[0].playlist)}
               circleSize={30}
               dotSize={18}
               circleColor='rgb(45,156,219)'
-              // lineColor='rgb(45,156,219)'
               timeContainerStyle={{ minWidth: 0, marginTop: -5 }} // Adjusted to remove the time container space
               timeStyle={{ display: 'none' }} // Hide the time display
               descriptionStyle={{ color: 'gray' }}
