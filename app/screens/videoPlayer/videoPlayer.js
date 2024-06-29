@@ -34,7 +34,7 @@ const FirstRoute = ({ queries }) => (
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
             {
                 queries.map((val, idx) => {
-                    console.log(val)
+                    // console.log(val)
                     return (
                         <View style={{ flex: 1, width: val.sender ? "90%" : "100%", backgroundColor: "#f2f3f7", padding: 15, borderRadius: 15, marginBottom: 10, alignSelf: "flex-end" }} key={idx}>
                             {
@@ -82,7 +82,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
     const [muted, setMuted] = useState(false);
     const [fullscreen, setFullscreen] = useState(false);
     const dispatch = useDispatch();
-    console.log(videoContent)
+    // console.log(videoContent)
 
     const toggleMute = () => {
         setMuted(!muted);

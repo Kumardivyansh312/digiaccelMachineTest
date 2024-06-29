@@ -2,57 +2,92 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import Timeline from 'react-native-timeline-flatlist';
 import Icon from 'react-native-vector-icons/Feather';
+import AntDesign from "react-native-vector-icons/AntDesign"
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Circle from './circle';
 
-const data = [
-  {
-    title: 'Archery Training',
-    circleColor: '#009688',
-    lineColor: 'grey'
-  },
-  {
-    title: 'Play Badminton',
-    circleColor: "#e5eefa",
-    lineColor: '#009688'
-  },
-  {
-    title: 'Lunch',
-    icon: <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: "transparent"
-    }}>
-      <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
-    </View>,
-    circleColor: "#e5eefa",
-    lineColor: '#009688'
+// const data = [
+//   {
+//     title: 'Archery Training',
+//     circleColor: '#009688',
+//     lineColor: 'grey'
+//   },
+//   {
+//     title: 'Play Badminton',
+//     circleColor: "#e5eefa",
+//     lineColor: '#009688'
+//   },
+//   {
+//     title: 'Lunch',
+//     icon: <View style={{
+//       flex: 1,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//       backgroundColor: "transparent"
+//     }}>
+//       <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
+//     </View>,
+//     circleColor: "#e5eefa",
+//     lineColor: '#009688'
 
-  },
-  {
-    title: 'Watch Soccer',
-    icon: <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: "transparent"
-    }}>
-      <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
-    </View>,
-    percentage: 80,
-    circleColor: "#e5eefa",
-    lineColor: '#009688'
-  },
-  {
-    title: 'Go to Fitness center',
-    circleColor: '#009688',
-    percentage: 100,
-    circleColor: "#e5eefa",
-    lineColor: '#009688'
+//   },
+//   {
+//     title: 'Watch Soccer',
+//     icon: <View style={{
+//       flex: 1,
+//       justifyContent: 'center',
+//       alignItems: 'center',
+//       backgroundColor: "transparent"
+//     }}>
+//       <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
+//     </View>,
+//     percentage: 80,
+//     circleColor: "#e5eefa",
+//     lineColor: '#009688'
+//   },
+//   {
+//     title: 'Go to Fitness center',
+//     circleColor: '#009688',
+//     percentage: 100,
+//     circleColor: "#e5eefa",
+//     lineColor: '#009688'
 
-  }
-];
+//   }
+// ];
+
+
+const transformData = (inputData) => {
+  return inputData.map(item => {
+    let newData = {
+      title: item.title,
+      icon: ""
+    };
+    console.log(item, "item")
+
+    if (item.duration && item.completed > item.duration - 3) {
+      newData.icon = <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "transparent"
+      }}>
+        <AntDesign name="check" size={14} color="white" />
+      </View>
+      newData.circleColor = '#009688'
+      newData.lineColor = '#009688'
+    } else if (!item.duration && item.completed === 0) {
+      newData.icon = <Icon name="lock" size={14} color="white" />
+      newData.circleColor = 'grey'
+      newData.lineColor = '#009688'
+    } else {
+      newData.circleColor = 'grey'
+      newData.lineColor = '#009688'
+      newData.icon = <Circle size={30} borderWidth={4} borderColor='green' percentage={item.completed / item.duration * 100} />
+    }
+
+    return newData;
+  });
+};
 
 const Accordion = ({ title, children, leftIconName, listData }) => {
   const [expanded, setExpanded] = useState(false);
@@ -94,7 +129,7 @@ const Accordion = ({ title, children, leftIconName, listData }) => {
           <View style={styles.containerTimeline}>
             <Timeline
               style={styles.list}
-              data={data}
+              data={transformData(listData)}
               circleSize={30}
               dotSize={18}
               circleColor='rgb(45,156,219)'
@@ -103,7 +138,7 @@ const Accordion = ({ title, children, leftIconName, listData }) => {
               timeStyle={{ display: 'none' }} // Hide the time display
               descriptionStyle={{ color: 'gray' }}
               // eventContainerStyle={{backgroundColor:"white"}}
-              rowContainerStyle={{ backgroundColor: "white", paddingVertical: -5 }}
+              rowContainerStyle={{ paddingVertical: -5 }}
               options={{
                 // style: { paddingTop: 5 }
               }}
