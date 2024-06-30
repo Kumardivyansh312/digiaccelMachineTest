@@ -106,13 +106,13 @@ const Accordion = ({ title, leftIconName, listData }) => {
 
   const height = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 200], // Adjust this value based on content
+    outputRange: [0, 300], // Adjust this value based on content
     extrapolate: 'clamp',
   });
 
   const rotateIcon = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '-180deg'],
+    outputRange: ['0deg', '180deg'],
     extrapolate: 'clamp',
   });
 
@@ -126,7 +126,7 @@ const Accordion = ({ title, leftIconName, listData }) => {
           <MaterialIcons name="expand-more" size={28} color="#0d6ddf" />
         </Animated.View>
       </TouchableOpacity>
-      <Animated.View style={{ ...styles.contentContainer }}>
+      <Animated.View style={{ ...styles.contentContainer  }}>
         {expanded && <View style={styles.content}>
           <View style={styles.containerTimeline}>
             <Timeline

@@ -17,8 +17,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
             </View>
             <View style={{ flex: 1, padding: 20, paddingVertical: 25, backgroundColor: "#f2f3f7", borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
-                <Text variant="displaySmall">Sign-in</Text>
-
+                <Text style={{fontFamily:"Rubik Black", fontSize:25, fontWeight:"600" , color:"black"}}>Sign-in</Text>
                 <Box alignItems="center">
                     <Input
                         mx="3"
@@ -52,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
                     <Text style={{ color: "blue" }}>Forgot password ?</Text>
                 </TouchableOpacity>
 
-                <View style={{flexDirection:"row",marginTop:30}}>
+                <View style={{ flexDirection: "row", marginTop: 30 }}>
                     <Checkbox
                         status={checked ? 'checked' : 'unchecked'}
                         // status={'checked'}
@@ -60,12 +59,16 @@ const LoginScreen = ({ navigation }) => {
                             setChecked(!checked);
                         }}
                     />
-                    <Text style={{width:"90%"}}>By signing up, you agree to our <Text style={{ color: "blue" }}>terms of service</Text> and <Text style={{ color: "blue" }}>privacy policy.</Text></Text>
+                    <Text style={{ width: "90%" }}>By signing up, you agree to our <Text style={{ color: "blue" }}>terms of service</Text> and <Text style={{ color: "blue" }}>privacy policy.</Text></Text>
                 </View>
 
-                <Button colorScheme={"blue"} borderRadius={10} mt={5} size={"lg"} onPress={() => {
+                <Button colorScheme={"blue"} borderRadius={10} mt={5} _text={{fontFamily:"Rubik Bold"}} size={"lg"} style={{}} onPress={() => {
                     navigation.navigate("DashbardScreen")
-                }}>Sign-in</Button>
+                }}>
+                    {/* <Text style={{ fontFamily: "Rubik-Bold" }}> */}
+                        Sign-in
+                    {/* </Text> */}
+                </Button>
 
             </View>
         </View>
