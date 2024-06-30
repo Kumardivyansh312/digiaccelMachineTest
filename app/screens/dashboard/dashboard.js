@@ -27,7 +27,7 @@ const renderItem = ({ item }) => {
                         <Image source={{ uri: item.imageUrl }} style={{ height: 120, width: 110, objectFit: "cover" }} />
                     </View>
                     <View style={{ marginLeft: 12 }}>
-                        <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
+                        <Text style={{ fontSize: 18, color:"black" }}>{item.courseName}</Text>
                         {
                             !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
                                 <Text style={{ color: "blue", marginTop: 5 }}>{timeLeftText}</Text>
@@ -36,7 +36,7 @@ const renderItem = ({ item }) => {
                                 <Box w="100%" mt={6} >
                                     <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
                                 </Box>
-                                <Text style={{ fontSize: 18 }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
+                                <Text style={{ fontSize: 18, color:"black" }}>{sumPlaylistDurationWatched(item.playlist)}%</Text>
                             </>
                                 :
                                 <Text style={{ fontSize: 18, color: "green" }}>Start Course</Text>
@@ -60,7 +60,7 @@ const renderItemRecentlyCompleted = ({ item }) => (
                 <Image source={{ uri: item.imageUrl }} style={{ height: 60, width: 60, objectFit: "cover" }} />
             </View>
             <View style={{ marginLeft: 12 }}>
-                <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
+                <Text style={{ fontSize: 18, color:"black" }}>{item.courseName}</Text>
                 <Text style={{ color: "green", marginTop: 5, textAlignVertical: "center" }}>{`completed`} <AntDesign name={"checkcircle"} size={14} color="green" /></Text>
             </View>
         </TouchableOpacity>
@@ -88,12 +88,12 @@ const renderItemVertical = ({ item }) => {
                         <Image source={{ uri: item.imageUrl }} style={{ height: 90, width: 90, objectFit: "cover" }} />
                     </View>
                     <View style={{ marginLeft: 12 }}>
-                        <Text style={{ fontSize: 18 }}>{item.courseName}</Text>
+                        <Text style={{ fontSize: 18, color:"black" }}>{item.courseName}</Text>
                         {item.isFree ?
                             <>
                                 {
                                     !isNaN(sumPlaylistDurationWatched(item.playlist)) ? <>
-                                        <Text style={{ color: "blue", marginTop: 5 }}>{timeLeftText}</Text>
+                                        <Text style={{ color: "blue", marginTop: 5, color:"black" }}>{timeLeftText}</Text>
                                         <Box w="100%" mt={6} >
                                             <Progress value={sumPlaylistDurationWatched(item.playlist)} colorScheme="primary" />
                                         </Box>
@@ -106,7 +106,7 @@ const renderItemVertical = ({ item }) => {
                             :
                             <View style={{ marginTop: 5, flexDirection: "row", alignItems: "center" }}>
                                 <SimpleLineIcons name="lock" size={18} />
-                                <Text style={{ fontSize: 16, marginLeft: 8 }}>Locked</Text>
+                                <Text style={{ fontSize: 16, marginLeft: 8, color:"black" }}>Locked</Text>
                             </View>
                         }
                     </View>
@@ -129,7 +129,7 @@ const DashboardScreen = ({ navigation }) => {
                 <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ marginRight: 10 }}>
                     <Ionicons name="arrow-back" size={18} color="black" />
                 </TouchableOpacity>
-                <Text>Back to Dashbard</Text>
+                <Text style={{ color:"black"}}>Back to Dashbard</Text>
             </View>
             {dummyData.filter((val) => {
                 return val.playlist.reduce((total, video) => total + video.completed, 0)

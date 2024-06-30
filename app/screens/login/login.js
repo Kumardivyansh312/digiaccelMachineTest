@@ -61,7 +61,7 @@ const LoginScreen = ({ navigation }) => {
                             setChecked(!checked);
                         }}
                     />
-                    <Text style={{ width: "90%" }}>By signing up, you agree to our <Text style={{ color: "blue" }}>terms of service</Text> and <Text style={{ color: "blue" }}>privacy policy.</Text></Text>
+                    <Text style={{ width: "90%", color:"black" }}>By signing up, you agree to our <Text style={{ color: "blue" }}>terms of service</Text> and <Text style={{ color: "blue" }}>privacy policy.</Text></Text>
                 </View>
 
                 <Button colorScheme={"blue"} borderRadius={10} mt={5} _text={{fontFamily:"Rubik Bold"}} size={"lg"} style={{}} onPress={() => {

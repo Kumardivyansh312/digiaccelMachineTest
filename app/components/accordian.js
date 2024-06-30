@@ -43,7 +43,6 @@ const Accordion = ({ title, leftIconName, listData }) => {
   const [animation] = useState(new Animated.Value(0));
   const dummyData = useSelector(state => state.mainReducer.dummyData)
 
-
   const toggleAccordion = () => {
     setExpanded(!expanded);
     Animated.timing(animation, {
@@ -75,7 +74,7 @@ const Accordion = ({ title, leftIconName, listData }) => {
           <MaterialIcons name="expand-more" size={28} color="#0d6ddf" />
         </Animated.View>
       </TouchableOpacity>
-      <Animated.View style={{ ...styles.contentContainer  }}>
+      <Animated.View style={{ ...styles.contentContainer }}>
         {expanded && <View>
           <View style={styles.containerTimeline}>
             <Timeline
@@ -87,6 +86,10 @@ const Accordion = ({ title, leftIconName, listData }) => {
               timeContainerStyle={{ minWidth: 0, marginTop: -5 }} // Adjusted to remove the time container space
               timeStyle={{ display: 'none' }} // Hide the time display
               descriptionStyle={{ color: 'gray' }}
+              titleStyle={{
+                color: "black",
+                marginTop: -5
+              }}
               rowContainerStyle={{ paddingVertical: -5 }}
               options={{
               }}

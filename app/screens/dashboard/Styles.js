@@ -8,6 +8,7 @@ export const styles = StyleSheet.create({
     },
     heading: {
         fontSize: 18,
+         color:"black",
         fontWeight: 'bold',
         marginBottom: 10,
         marginHorizontal: 20
@@ -36,6 +37,7 @@ export const styles = StyleSheet.create({
         elevation: 3,
     },
     item: {
+        height: 90,
         backgroundColor: 'white',
         paddingRight: 20,
         padding: 15,

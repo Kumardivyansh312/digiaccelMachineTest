@@ -137,7 +137,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                     return (
                         <Pressable onPress={() => setIndex(i)} key={i}>
                             <Box borderBottomWidth="3" borderColor={borderColor} justifyContent={"center"} width={150} flexDirection={"row"} alignItems="center" p="3" cursor="pointer" key={route.key}>
-                                <Feather name={route.icon} size={18} />
+                                <Feather name={route.icon} color={"black"} size={18} />
                                 <Text style={{ color, marginLeft: 5 }}>{route.title}</Text>
                             </Box>
                         </Pressable>
@@ -175,12 +175,17 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                 <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ marginRight: 10 }}>
                     <Ionicons name="arrow-back" size={18} color="black" />
                 </TouchableOpacity>
-                <Text>Back</Text>
+                <Text style={{
+         color:"black"
+                }}>Back</Text>
             </View>
 
             <View style={{ flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingBottom: 15 }}>
                 <View style={{ flex: 2 }}>
-                    <Text style={{ fontSize: 18 }} numberOfLines={1}>{videoContent.courseName}</Text>
+                    <Text style={{ fontSize: 18 ,
+         color:"black",
+
+                    }} numberOfLines={1}>{videoContent.courseName}</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: "flex-end" }}>
                     {
