@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Video from 'react-native-video';
@@ -11,6 +11,7 @@ import { currentlyWatching, playDuration, playedDuration } from '../../redux/act
 import Feather from "react-native-vector-icons/Feather";
 import { Box, Center, Pressable, useColorModeValue, TextArea, Button, Avatar } from 'native-base';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import { styles } from './Styles';
 
 const FirstRoute = ({ queries }) => (
     <View style={{ flex: 1, height: "100%", backgroundColor: "white" }}>
@@ -33,7 +34,6 @@ const FirstRoute = ({ queries }) => (
         <View style={{ flex: 1, paddingHorizontal: 15 }}>
             {
                 queries.map((val, idx) => {
-                    // console.log(val)
                     return (
                         <View style={{ flex: 1, width: val.sender ? "90%" : "100%", backgroundColor: "#f2f3f7", padding: 15, borderRadius: 15, marginBottom: 10, alignSelf: "flex-end" }} key={idx}>
                             {
@@ -67,15 +67,9 @@ const SecondRoute = () => (
     </Center>
 );
 
-
-const initialLayout = {
-    width: Dimensions.get('window').width / 2
-};
-
 const VideoPlayerScreen = ({ navigation, route }) => {
     const dummyData = useSelector(state => state.mainReducer.dummyData)
     const videoContent = dummyData.filter((val) => val.id === route.params.id)[0];
-    console.log("1")
     const videoRef = useRef();
     const [currentlyWatch, setCurrentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
     const [currentTime, setCurrentTime] = useState(videoContent.playlist[currentlyWatch]?.completed);
@@ -85,7 +79,6 @@ const VideoPlayerScreen = ({ navigation, route }) => {
     const [fullscreen] = useState(false);
     const dispatch = useDispatch();
     const isFocused = useIsFocused()
-    // console.log(videoContent)
 
     useFocusEffect(
         React.useCallback(() => {
@@ -125,8 +118,8 @@ const VideoPlayerScreen = ({ navigation, route }) => {
 
     const [index, setIndex] = useState(0);
     const routes = [
-        { key: 'first', title: 'Queries', icon: "" },
-        { key: 'second', title: 'Notes' }
+        { key: 'first', title: 'Queries', icon: "message-circle" },
+        { key: 'second', title: 'Notes' ,icon:"file-text" }
     ];
 
     const renderScene = SceneMap({
@@ -144,7 +137,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
                     return (
                         <Pressable onPress={() => setIndex(i)} key={i}>
                             <Box borderBottomWidth="3" borderColor={borderColor} justifyContent={"center"} width={150} flexDirection={"row"} alignItems="center" p="3" cursor="pointer" key={route.key}>
-                                <Feather name="message-circle" size={18} />
+                                <Feather name={route.icon} size={18} />
                                 <Text style={{ color, marginLeft: 5 }}>{route.title}</Text>
                             </Box>
                         </Pressable>
@@ -171,11 +164,7 @@ const VideoPlayerScreen = ({ navigation, route }) => {
         );
     };
 
-    // console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
-    console.log(currentlyWatch, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
-
     const playNextVideo = () => {
-        console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
         // videoRef.current.seek(0)
     }
 
@@ -271,21 +260,6 @@ const VideoPlayerScreen = ({ navigation, route }) => {
     );
 }
 
-const styles = StyleSheet.create({
-    backgroundVideo: {
-        aspectRatio: 1920 / 1080
-    },
-    container: {
-        flex: 1,
-        padding: 20,
-        paddingTop: 65,
-        backgroundColor: 'white'
-    },
-    list: {
-        flex: 1,
-        marginTop: 20,
-    },
-});
 
 export default VideoPlayerScreen;
 

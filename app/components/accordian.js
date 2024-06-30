@@ -7,63 +7,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Circle from './circle';
 import { useSelector } from 'react-redux';
 
-// const data = [
-//   {
-//     title: 'Archery Training',
-//     circleColor: '#009688',
-//     lineColor: 'grey'
-//   },
-//   {
-//     title: 'Play Badminton',
-//     circleColor: "#e5eefa",
-//     lineColor: '#009688'
-//   },
-//   {
-//     title: 'Lunch',
-//     icon: <View style={{
-//       flex: 1,
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       backgroundColor: "transparent"
-//     }}>
-//       <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
-//     </View>,
-//     circleColor: "#e5eefa",
-//     lineColor: '#009688'
-
-//   },
-//   {
-//     title: 'Watch Soccer',
-//     icon: <View style={{
-//       flex: 1,
-//       justifyContent: 'center',
-//       alignItems: 'center',
-//       backgroundColor: "transparent"
-//     }}>
-//       <Circle size={30} borderWidth={4} borderColor='green' percentage={60} />
-//     </View>,
-//     percentage: 80,
-//     circleColor: "#e5eefa",
-//     lineColor: '#009688'
-//   },
-//   {
-//     title: 'Go to Fitness center',
-//     circleColor: '#009688',
-//     percentage: 100,
-//     circleColor: "#e5eefa",
-//     lineColor: '#009688'
-
-//   }
-// ];
-
-
 const transformData = (inputData) => {
   return inputData.map(item => {
     let newData = {
       title: item.title,
       icon: ""
     };
-    console.log(item, "item")
 
     if (item.duration && item.completed > item.duration - 2) {
       newData.icon = <View style={{
@@ -127,7 +76,7 @@ const Accordion = ({ title, leftIconName, listData }) => {
         </Animated.View>
       </TouchableOpacity>
       <Animated.View style={{ ...styles.contentContainer  }}>
-        {expanded && <View style={styles.content}>
+        {expanded && <View>
           <View style={styles.containerTimeline}>
             <Timeline
               style={styles.list}
@@ -138,10 +87,8 @@ const Accordion = ({ title, leftIconName, listData }) => {
               timeContainerStyle={{ minWidth: 0, marginTop: -5 }} // Adjusted to remove the time container space
               timeStyle={{ display: 'none' }} // Hide the time display
               descriptionStyle={{ color: 'gray' }}
-              // eventContainerStyle={{backgroundColor:"white"}}
               rowContainerStyle={{ paddingVertical: -5 }}
               options={{
-                // style: { paddingTop: 5 }
               }}
               innerCircle={'icon'}
             />
@@ -183,11 +130,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     overflow: 'hidden',
-  },
-  content: {
-    // flex: 1,
-    // padding: 15,
-    // zIndex: 10
   },
 });
 

@@ -1,16 +1,17 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity, Animated } from 'react-native';
+import React, { useRef, useState, useCallback } from 'react';
+import { View, TouchableOpacity, Animated } from 'react-native';
 import Video from 'react-native-video';
 import VideoController from '../../components/videoController';
 import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useDispatch } from 'react-redux';
-import { currentlyWatching, playDuration, playedDuration } from '../../redux/actions/mainActions';
+import { playDuration, playedDuration } from '../../redux/actions/mainActions';
+import { styles } from './Styles';
 
 const VideoPlayerAloneScreen = ({ navigation, route }) => {
     // Retrieve video details from route params
     const videoContent = route.params;
     const videoRef = useRef();
-    const [currentlyWatch, setCurrentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
+    const [currentlyWatch] = useState(videoContent.currentlyWatching ? videoContent.currentlyWatching : 0);
     const [currentTime, setCurrentTime] = useState(route.params.currentTime);
     const [duration, setDuration] = useState(route.params.duration);
     const [isPlaying, setIsPlaying] = useState(route.params.isPlaying);
@@ -63,11 +64,6 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
         }).start();
         setShowController(!showController);
     };
-
-    const playNextVideo = () => {
-        videoRef.current.seek(0)
-        // console.log(videoContent.playlist[currentlyWatch].videoUrl, "videoContent.playlist[videoContent.currentlyWatching].videoUrl")
-    }
 
     return (
         <View style={styles.container}>
@@ -128,37 +124,6 @@ const VideoPlayerAloneScreen = ({ navigation, route }) => {
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    videoContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    fullScreenVideo: {
-        ...StyleSheet.absoluteFillObject,
-        zIndex: 1,
-    },
-    backgroundVideo: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        right: 0,
-    },
-    controller: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: 'white', // Background color for controller
-        zIndex: 3,
-    },
-});
+
 
 export default VideoPlayerAloneScreen;

@@ -34,15 +34,11 @@ export default function MainReducer(state = initialState, action) {
       return {
         ...state,
         dummyData: [...state.dummyData.map((val, idx) => {
-          console.log("Singl 1")
           if (payload.data.id === val.id) {
-            console.log("Sing 2")
             return {
               ...val,
               playlist: val.playlist.map((innerLoop) => {
-                console.log("Singl")
                 if (innerLoop.id-1 === val.currentlyWatching) {
-                  console.log("123213")
                   return {
                     ...innerLoop,
                     duration: payload.totalDuration,

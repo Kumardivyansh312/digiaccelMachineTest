@@ -1,6 +1,5 @@
 import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native';
 import { CardStyleInterpolators, createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 import LoginScreen from '../screens/login/login';
 import DashboardScreen from '../screens/dashboard/dashboard';
 import { Text, TouchableOpacity, View } from 'react-native';

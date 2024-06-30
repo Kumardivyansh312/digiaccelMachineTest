@@ -6,12 +6,12 @@ import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons"
 import { Box, Progress } from 'native-base';
 import { navigationRef } from '../../navigations/mainNavigation'
 import { useSelector } from 'react-redux'
+import { styles } from './Styles'
+import { sumPlaylistDuration, sumPlaylistDurationWatched } from '../../utils/functions'
 
 const renderItem = ({ item }) => {
     const duration = sumPlaylistDuration(item.playlist);
-
     let timeLeftText = "Start Course";
-
     if (duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0) {
         timeLeftText = `${duration.hours > 0 ? duration.hours + 'h ' : ''}${duration.minutes > 0 ? duration.minutes + 'm ' : ''}${duration.seconds > 0 ? duration.seconds + 's ' : ''}Learning left`;
     }
@@ -116,31 +116,6 @@ const renderItemVertical = ({ item }) => {
     )
 };
 
-function sumPlaylistDuration(playlist) {
-    if (playlist.reduce((total, video) => total + video.completed, 0) === 0) {
-        const totalDurationInSeconds = playlist.reduce((total, video) => total + video.duration, 0) - playlist.reduce((total, video) => total + video.completed, 0);
-        return {
-            hours: Math.floor(totalDurationInSeconds / 3600),
-            minutes: Math.floor((totalDurationInSeconds % 3600) / 60),
-            seconds: Math.floor(totalDurationInSeconds % 60)
-
-        }
-    }
-    const totalDurationInSeconds = playlist.reduce((total, video) => total + video.duration, 0) - playlist.reduce((total, video) => total + video.completed, 0);
-    // const totalDurationWatchedInSeconds = playlist.reduce((total, video) => total + video.completed, 0);
-    const hours = Math.floor(totalDurationInSeconds / 3600);
-    const minutes = Math.floor((totalDurationInSeconds % 3600) / 60);
-    const seconds = Math.floor(totalDurationInSeconds % 60);
-
-    return { hours, minutes, seconds };
-}
-
-function sumPlaylistDurationWatched(playlist) {
-    const totalDurationInSeconds = playlist.reduce((total, video) => total + video.duration, 0);
-    const totalDurationWatchedInSeconds = playlist.reduce((total, video) => total + video.completed, 0);
-    return Math.floor(totalDurationWatchedInSeconds / totalDurationInSeconds * 100)
-}
-
 const DashboardScreen = ({ navigation }) => {
 
     const dummyData = useSelector(state => state.mainReducer.dummyData)
@@ -220,72 +195,3 @@ const DashboardScreen = ({ navigation }) => {
 
 export default DashboardScreen
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 20,
-        paddingHorizontal: 10,
-    },
-    heading: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-        marginHorizontal: 20
-    },
-    horizontalList: {
-        flexGrow: 0,
-        height: 250,
-        marginBottom: 10,
-    },
-    verticalList: {
-        flex: 1,
-    },
-    itemProgress: {
-        height: 150,
-        backgroundColor: 'white',
-        marginVertical: 8,
-        padding: 15,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
-    },
-    item: {
-        backgroundColor: 'white',
-        paddingRight: 20,
-        padding: 15,
-        marginVertical: 8,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-        elevation: 3,
-    },
-    itemVertical: {
-        backgroundColor: 'white',
-        margin: 5,
-        padding: 10,
-        borderRadius: 10,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.22,
-        shadowRadius: 2.22,
-
-        elevation: 3,
-    },
-    title: {
-        fontSize: 16,
-    },
-});

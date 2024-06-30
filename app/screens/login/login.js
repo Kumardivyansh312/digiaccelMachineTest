@@ -1,23 +1,25 @@
 
-import { Box, Button, HStack, Icon, Input, Pressable } from 'native-base';
+import { Box, Button, Icon, Input, Pressable } from 'native-base';
 import React, { useState } from 'react';
-import { View, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, Image, TouchableOpacity } from 'react-native';
 import { Checkbox, Text } from 'react-native-paper';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import { Styles } from './styles';
+import { GlobalStyles } from '../../helpers/GlobalStyleSheet';
 
 const LoginScreen = ({ navigation }) => {
     const [show, setShow] = useState(false);
     const [checked, setChecked] = React.useState(false);
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
-            <View style={{ flex: 1, padding: 15 }}>
-                <Image source={require('../../assets/images/digi_logo.png')} style={{ height: 45, objectFit: "contain" }} />
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <Image source={require('../../assets/images/18383.jpg')} style={{ height: 300, objectFit: "contain" }} />
+        <View style={Styles.container}>
+            <View style={Styles.logoView}>
+                <Image source={require('../../assets/images/digi_logo.png')} style={Styles.logoImage} />
+                <View style={GlobalStyles.center}>
+                    <Image source={require('../../assets/images/18383.jpg')} style={Styles.image} />
                 </View>
             </View>
-            <View style={{ flex: 1, padding: 20, paddingVertical: 25, backgroundColor: "#f2f3f7", borderTopLeftRadius: 25, borderTopRightRadius: 25 }}>
-                <Text style={{fontFamily:"Rubik Black", fontSize:25, fontWeight:"600" , color:"black"}}>Sign-in</Text>
+            <View style={Styles.roundView}>
+                <Text style={Styles.text}>Sign-in</Text>
                 <Box alignItems="center">
                     <Input
                         mx="3"
@@ -47,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
 
 
                 </Box>
-                <TouchableOpacity style={{ alignSelf: "flex-end", marginTop: 12 }}>
+                <TouchableOpacity style={Styles.forgetPassword}>
                     <Text style={{ color: "blue" }}>Forgot password ?</Text>
                 </TouchableOpacity>
 
@@ -65,9 +67,7 @@ const LoginScreen = ({ navigation }) => {
                 <Button colorScheme={"blue"} borderRadius={10} mt={5} _text={{fontFamily:"Rubik Bold"}} size={"lg"} style={{}} onPress={() => {
                     navigation.navigate("DashbardScreen")
                 }}>
-                    {/* <Text style={{ fontFamily: "Rubik-Bold" }}> */}
                         Sign-in
-                    {/* </Text> */}
                 </Button>
 
             </View>
